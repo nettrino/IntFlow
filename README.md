@@ -32,9 +32,9 @@ License
   All rights reserved.
 
   This software was developed by (alphabetically)
-  Kangkook Jee <jikk@cs.columbia.edu>
-  Theofilos Petsios <theofilos@cs.columbia.edu>
-  Marios Pomonis <mpomonis@cs.columbia.edu>
+    * Kangkook Jee <jikk@cs.columbia.edu>
+    * Theofilos Petsios <theofilos@cs.columbia.edu>
+    * Marios Pomonis <mpomonis@cs.columbia.edu>
   at Columbia University, New York, NY, USA, in September 2014.
 
   Redistribution and use in source and binary forms, with or without
