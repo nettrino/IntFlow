@@ -6,7 +6,7 @@ flow tracking and dynamic program analysis. By associating sources of untrusted
 input with the identified arithmetic errors, IntFlow differentiates between
 non-critical, possibly developer-intended undefined arithmetic operations,
 and potentially exploitable arithmetic bugs.
-\pname examines a broad set of integer errors,
+IntFlow examines a broad set of integer errors,
 covering almost all cases of C/C++ undefined behaviors, and achieves high
 error detection coverage.
 
