@@ -1,0 +1,66 @@
+BUILD AND USE INSTRUCTIONS
+Tested on Debian 7.8.0 x86 and Debian 7.8.0 x86_64
+
+PHASE1: Build LLVM with Intflow
+
+1. Point `LLVM_SRC' to the directory of the source code (extracted tarball)
+	Please use absolute paths because configure fails with relative paths
+	e.g. export LLVM_SRC="/home/user/intflow-llvm"
+2. Point `LLVM_BUILD' to the building directory (create it if needed)
+	Please use absolute paths because configure fails with relative paths
+	e.g. export LLVM_BUILD="/home/user/intflow-build"
+3. Install autoconf and g++
+	e.g. sudo apt-get install g++ autoconf
+4. Create necessary files in /tmp:
+	cp $LLVM_SRC/ioc-helpers/whitelist.files /tmp
+	cp $LLVM_SRC/ioc-helpers/exclude.files /tmp
+	echo "1" > /tmp/mode
+
+	If you would like to put them in a different directory, please update the following files:lines
+	$LLVM_SRC/projects/llvm-deps/include/Intflow.h:20
+	$LLVM_SRC/projects/llvm-deps/include/Intflow.h:21
+	$LLVM_SRC/ioc-helpers/ioc-helpers.c:33
+
+	/tmp/mode holds the mode of operation for IntFlow as follows:
+	1: Whitelisting
+	2: Blacklisting
+	3: Sensitive
+
+5. cd $LLVM_BUILD
+6. CC=gcc CXX=g++ $LLVM_SRC/configure --enable-optimized
+7. make
+	e.g make -j12
+  [...wait...]
+
+8. Build helpers/wrappers
+	cd $LLVM_SRC/ioc-helpers && make
+
+9. Add helpers/wrappers to libclang_rti.ioc
+	if x86:
+		ar rs $LLVM_BUILD/Release+Asserts/lib/clang/3.2/lib/linux/libclang_rt.ioc-i386.a $LLVM_SRC/ioc-helpers/ioc-helpers.o
+	if x86_64:
+		ar rs $LLVM_BUILD/Release+Asserts/lib/clang/3.2/lib/linux/libclang_rt.ioc-x86_64.a $LLVM_SRC/ioc-helpers/ioc-helpers.o
+
+PHASE 2:  Use Intflow
+
+For convenience add the following in .profile:
+
+export SS_CC="$LLVM_BUILD/Release+Asserts/bin/clang -O3 -fioc-explicit-conversion -fioc-implicit-conversion -fioc-unsigned -fioc-signed -fioc-shifts -fioc-strict-shifts \
+-Xclang -load  -Xclang $LLVM_BUILD/projects/poolalloc/Release+Asserts/lib/LLVMDataStructure.so  \
+-Xclang -load  -Xclang  $LLVM_BUILD/projects/poolalloc/Release+Asserts/lib/AssistDS.so \
+-Xclang -load   -Xclang  $LLVM_BUILD/projects/llvm-deps/Release+Asserts/lib/pointstointerface.so     \
+-Xclang -load  -Xclang  $LLVM_BUILD/projects/llvm-deps/Release+Asserts/lib/sourcesinkanalysis.so  \
+-Xclang -load  -Xclang  $LLVM_BUILD/projects/llvm-deps/Release+Asserts/lib/Constraints.so   \
+-Xclang  -load  -Xclang  $LLVM_BUILD/projects/llvm-deps/Release+Asserts/lib/Deps.so   \
+-Xclang -load -Xclang  $LLVM_BUILD/projects/llvm-deps/Release+Asserts/lib/Intflow.so"
+
+You can then build Intflow-protected files using:
+	$SS_CC `file.c'
+You can examine the instrumentation at the IR level using
+	$SS_CC -S -emit-llvm `file.c'
+
+In case building a file fails, try with:
+__PASSEND__=1 $SS_CC `file.c'
+
+
+You can change the mode of operation without recompiling by modifying the value in /tmp/mode respectively
