@@ -31,10 +31,7 @@ License
   Copyright (c) 2014, Columbia University
   All rights reserved.
 
-  This software was developed by (alphabetically)
-    * Kangkook Jee <jikk@cs.columbia.edu>
-    * Theofilos Petsios <theofilos@cs.columbia.edu>
-    * Marios Pomonis <mpomonis@cs.columbia.edu>
+  This software was developed by (alphabetically) Kangkook Jee, Theofilos Petsios and Marios Pomonis
   at Columbia University, New York, NY, USA, in September 2014.
 
   Redistribution and use in source and binary forms, with or without
